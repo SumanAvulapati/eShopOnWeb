@@ -25,7 +25,7 @@ pipeline{
                 withCredentials([usernamePassword(credentialsId: 'NugetCredentials', passwordVariable: 'Nuget_CustomFeedPassword', usernameVariable: 'Nuget_CustomFeedUserName')]) {
                     // sh "docker build --pull -t eshopwebmvc -f src/Web/Dockerfile --build-arg Nuget_CustomFeedUserName --build-arg Nuget_CustomFeedPassword . --no-cache --progress=plain"
                     script {
-                        myapp = docker.build("gtaroadrash/${env.APP_NAME}:${env.BUILD_ID}")
+                        myapp = docker.build("gtaroadrash/${env.APP_NAME}:${env.BUILD_ID}", "-f src/Web/Dockerfile", "--build-arg Nuget_CustomFeedUserName", "--build-arg Nuget_CustomFeedPassword")
                     // docker-compose build --build-arg Nuget_CustomFeedUserName --build-arg Nuget_CustomFeedPassword
                     }
                 }
