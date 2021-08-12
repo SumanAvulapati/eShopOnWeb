@@ -8,14 +8,21 @@
 # RUN COMMAND
 #  docker run --name eshopweb --rm -it -p 5106:5106 web
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+
+ARG Nuget_CustomFeedUserName
+ARG Nuget_CustomFeedPassword
+
 WORKDIR /app
 
+# Copy csproj, sln and restore as distinct layers
 COPY *.sln .
 COPY . .
+RUN ls -l
 WORKDIR /app/src/Web
 RUN dotnet restore
 
-RUN dotnet publish -c Release -o out
+# publish app and libraries
+RUN dotnet publish -c Release -o out  --no-restore 
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
 WORKDIR /app
