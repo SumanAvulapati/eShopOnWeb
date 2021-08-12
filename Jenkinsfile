@@ -24,16 +24,20 @@ pipeline{
             steps{
                 withCredentials([usernamePassword(credentialsId: 'NugetCredentials', passwordVariable: 'Nuget_CustomFeedPassword', usernameVariable: 'Nuget_CustomFeedUserName')]) {
                     // sh "docker build --pull -t eshopwebmvc -f src/Web/Dockerfile --build-arg Nuget_CustomFeedUserName --build-arg Nuget_CustomFeedPassword . --no-cache --progress=plain"
-                    myapp = docker.build("gtaroadrash/${env.APP_NAME}:${env.BUILD_ID}")
+                    script {
+                        myapp = docker.build("gtaroadrash/${env.APP_NAME}:${env.BUILD_ID}")
                     // docker-compose build --build-arg Nuget_CustomFeedUserName --build-arg Nuget_CustomFeedPassword
                     }
                 }
+            }
         }
         stage('Push image build') {
             steps{
-                docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                    myapp.push("latest")
-                    myapp.push("${env.BUILD_ID}")
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+                            myapp.push("latest")
+                            myapp.push("${env.BUILD_ID}")
+                    }
                 }
             }
         }
