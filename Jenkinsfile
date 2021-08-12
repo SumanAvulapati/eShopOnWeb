@@ -35,6 +35,7 @@ pipeline{
                     myapp.push("latest")
                     myapp.push("${env.BUILD_ID}")
                 }
+            }
         }
     }
     post{
