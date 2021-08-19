@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eshopwebmvc
+  labels:
+    app: eshopwebmvc
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: eshopwebmvc
+  template:
+    metadata:
+      labels:
+        app: eshopwebmvc
+        tier: eshopwebmvc
+    spec:
+      containers:
+      - name: eshopwebmvc
+        image: gtaroadrash/eshopwebmvc:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5106
+          name: eshopwebmvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eshopwebmvc
+  labels:
+    app: eshopwebmvc
+spec:
+  selector:
+    app: eshopwebmvc
+    tier: eshopwebmvc
+  ports:
+    - port: 80
+      targetPort: 5106
+  type: LoadBalancer
