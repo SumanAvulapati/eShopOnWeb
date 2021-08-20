@@ -17,7 +17,6 @@ WORKDIR /app
 # Copy csproj, sln and restore as distinct layers
 COPY *.sln .
 COPY . .
-RUN ls -l
 WORKDIR /app/src/Web
 RUN dotnet restore
 
