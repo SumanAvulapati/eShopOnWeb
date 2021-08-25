@@ -21,16 +21,18 @@ pipeline{
         }        
         stage('Checkout') {
             steps {
-                checkout scm
+                git url: 'https://github.com/SumanAvulapati/eShopOnWeb.git'
                 }
         }
         stage('Build Docker build') {
             steps{
                 withCredentials([usernamePassword(credentialsId: 'NugetCredentials', passwordVariable: 'Nuget_CustomFeedPassword', usernameVariable: 'Nuget_CustomFeedUserName')]) {
                     // sh "docker build --pull -t eshopwebmvc -f src/Web/Dockerfile --build-arg Nuget_CustomFeedUserName --build-arg Nuget_CustomFeedPassword . --no-cache --progress=plain"
-                    script {
-                        myapp = docker.build("gtaroadrash/${env.APP_NAME}:${env.BUILD_ID}", "--build-arg Nuget_CustomFeedUserName", "--build-arg Nuget_CustomFeedPassword", "-f src/Web/Dockerfile .")
                     // docker-compose build --build-arg Nuget_CustomFeedUserName --build-arg Nuget_CustomFeedPassword
+                    // sh 'docker build --pull -t $APP_NAME:$BUILD_ID --build-arg Nuget_CustomFeedUserName --build-arg Nuget_CustomFeedPassword --no-cache --progress=plain -f src/Web/Dockerfile.debug .'
+                    script {
+                        // myapp = docker.build("gtaroadrash/${env.APP_NAME}:${env.BUILD_ID}", '--build-arg $Nuget_CustomFeedUserName --build-arg $Nuget_CustomFeedPassword -f src/Web/Dockerfile .')
+                       myapp = docker.build("gtaroadrash/${env.APP_NAME}:${env.BUILD_ID}", '--build-arg Nuget_CustomFeedUserName --build-arg Nuget_CustomFeedPassword -f src/Web/Dockerfile.debug . --no-cache')
                     }
                 }
             }
