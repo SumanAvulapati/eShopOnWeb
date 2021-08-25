@@ -4,6 +4,10 @@ pipeline{
     environment {
         dotnet ='/usr/bin/dotnet'
         APP_NAME = 'eshopwebmvc'
+        PROJECT_ID = 'mygcpproject-82449'
+        CLUSTER_NAME = 'cluster-1'
+        LOCATION = 'asia-south1-c'
+        CREDENTIALS_ID = 'MyGcpProject 82449'
         }
         
     triggers {
@@ -41,6 +45,12 @@ pipeline{
                 }
             }
         }
+        stage('Deploy to GKE') {
+            steps{
+                sh "sed -i 's/eshopwebmvc:latest/${env.APP_NAME}:${env.BUILD_ID}/g' src/Web/deployment.yaml"
+                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'src/Web/deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+            }
+        }        
     }
     post{
         always{
