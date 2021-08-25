@@ -21,7 +21,7 @@ pipeline{
         }        
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/SumanAvulapati/eShopOnWeb.git'
+                checkout scm
                 }
         }
         stage('Build Docker build') {
